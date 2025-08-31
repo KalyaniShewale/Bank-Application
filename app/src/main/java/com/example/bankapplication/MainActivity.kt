@@ -14,13 +14,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.bankapplication.model.TransferType
 import com.example.bankapplication.ui.screen.PaymentScreen
 import com.example.bankapplication.ui.theme.BankApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PaymentScreen(transferType = TransferType.Domestic)
+            PaymentScreen(transferType = TransferType.International)
         }
     }
 }

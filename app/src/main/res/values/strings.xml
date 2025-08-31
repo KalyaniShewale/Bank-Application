@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Bank Application</string>
+    <!-- Labels -->
+    <string name="label_recipient_name">Recipient Name</string>
+    <string name="label_account_number">Account Number</string>
+    <string name="label_amount">Amount</string>
+    <string name="label_iban">IBAN</string>
+    <string name="label_swift">SWIFT</string>
+    <string name="button_send_payment">Send Payment</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_name">Invalid Name</string>
+    <string name="error_invalid_account_number">Invalid Account Number</string>
+    <string name="error_invalid_amount">Invalid Amount</string>
+    <string name="error_invalid_iban">Invalid IBAN</string>
+    <string name="error_invalid_swift">Invalid SWIFT</string>
 </resources>

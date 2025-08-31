@@ -9,11 +9,13 @@ import androidx.compose.ui.Modifier
 @Composable
 fun SubmitButton(
     label: String,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        enabled = enabled
     ) {
         Text(text = label)
     }

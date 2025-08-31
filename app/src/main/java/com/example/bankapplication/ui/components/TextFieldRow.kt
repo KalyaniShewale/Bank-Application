@@ -13,13 +13,20 @@ fun TextFieldRow(
     label: String,
     value: String,
     onValueChange: (String) -> Unit = {},
-    error: String? = null
+    error: String? = null,
+    maxLength: Int = Int.MAX_VALUE
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = {
+                if (it.length <= maxLength) {
+                    onValueChange(it)
+                }
+            },
             label = { Text(label) },
+            singleLine = true,
+            maxLines = 1,
             modifier = Modifier.fillMaxWidth()
         )
         if (!error.isNullOrEmpty()) {
