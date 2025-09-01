@@ -14,4 +14,16 @@
     <string name="error_invalid_amount">Invalid Amount</string>
     <string name="error_invalid_iban">Invalid IBAN</string>
     <string name="error_invalid_swift">Invalid SWIFT</string>
+
+    <!-- Welcome -->
+    <string name="welcome_message">Welcome to Bank Application</string>
+
+    <!-- Navigation Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_payments">Payments</string>
+    <string name="tab_profile">Profile</string>
+
+    <!-- Payment Choices -->
+    <string name="domestic_transfer">Domestic Transfer</string>
+    <string name="international_transfer">International Transfer</string>
 </resources>
