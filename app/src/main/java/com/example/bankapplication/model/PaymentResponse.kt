@@ -2,6 +2,10 @@ package com.example.hankapplication.data.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Data classes for payment API request/response models with serialization annotations.
+ */
+
 // API Request Models
 data class DomesticPaymentRequest(
     @SerializedName("recipient_name")
@@ -39,11 +43,3 @@ data class PaymentApiResponse(
     val recipient: String
 )
 
-// Domain Model (for use inside the app)
-data class PaymentResult(
-    val transactionId: String,
-    val status: String,
-    val timestamp: String,
-    val amount: Double,
-    val recipient: String
-)

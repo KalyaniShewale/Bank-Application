@@ -10,10 +10,13 @@ import com.example.bankapplication.model.PaymentType
 import com.example.bankapplication.ui.screen.*
 import com.example.hankapplication.screen.SuccessScreen
 
+/**
+ * Navigation graph defining app screens and their transitions.
+ */
+
 sealed class Screen(val route: String) {
     object Welcome : Screen(Routes.WELCOME)
     object Success : Screen(Routes.SUCCESS)
-    object Main : Screen(Routes.MAIN)
     object Payments : Screen(Routes.PAYMENTS)
     object Payment : Screen(Routes.PAYMENT_WITH_ARG) {
         fun createRoute(type: String) = "${Routes.PAYMENT}/$type"
@@ -26,10 +29,6 @@ fun AppNavGraph(navController: NavHostController) {
 
         composable(Screen.Welcome.route) {
             WelcomeScreen(onContinue = { navController.navigate(Screen.Payments.route) })
-        }
-
-        composable(Screen.Main.route) {
-            MainScreen(navController)
         }
 
         composable(Screen.Payments.route) {

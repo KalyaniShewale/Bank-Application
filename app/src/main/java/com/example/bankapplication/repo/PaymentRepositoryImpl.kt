@@ -1,7 +1,7 @@
 package com.example.bankapplication.repo
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.content.Context
+import com.example.bankapplication.R
 import com.example.bankapplication.util.ApiResult
 import com.example.hankapplication.data.model.PaymentApiResponse
 import com.example.hankapplication.network.PaymentApiService
@@ -9,8 +9,12 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * Repository implementation handling payment operations with simulated API responses for testing.
+ */
 class PaymentRepositoryImpl @Inject constructor(
-    private val paymentApi: PaymentApiService
+    private val paymentApi: PaymentApiService,
+    private val context: Context
 ) {
     suspend fun sendPayment(
         recipientName: String,
@@ -21,57 +25,34 @@ class PaymentRepositoryImpl @Inject constructor(
         isInternational: Boolean = false
     ): ApiResult<PaymentApiResponse> {
         return try {
-
-            kotlinx.coroutines.delay(1500) // 1.5 second delay
-
-            // SIMULATE NETWORK DELAY
-
-            // TEST DIFFERENT CONDITIONS BASED ON INPUT VALUES
+            kotlinx.coroutines.delay(1500)
+            // this is for testing purposes only
             when {
-                // TEST 1: FAILURE - Invalid recipient name
                 recipientName.equals("fail", ignoreCase = true) -> {
-                    ApiResult.Error("Recipient not found or invalid", 404)
+                    ApiResult.Error(context.getString(R.string.error_recipient_not_found), 404)
                 }
-
-                // TEST 2: FAILURE - Insufficient funds (only for amounts > 100)
                 amount < 100 -> {
-                    ApiResult.Error("Insufficient funds", 402)
+                    ApiResult.Error(context.getString(R.string.error_insufficient_funds), 402)
                 }
-
-                // TEST 3: FAILURE - Invalid account number
                 accountNumber.equals("11111111", ignoreCase = true) -> {
-                    ApiResult.Error("Invalid account number", 400)
+                    ApiResult.Error(context.getString(R.string.error_invalid_account), 400)
                 }
-
-                // TEST 4: FAILURE - Server error
                 recipientName.equals("servererror", ignoreCase = true) -> {
-                    ApiResult.Error("Internal server error", 500)
+                    ApiResult.Error(context.getString(R.string.error_server), 500)
                 }
-
-                // TEST 5: FAILURE - Network error simulation
                 recipientName.equals("NetworkError", ignoreCase = true) -> {
                     throw java.io.IOException("Network connection failed")
                 }
-
-                // TEST 6: FAILURE - Invalid IBAN for international transfers
                 (isInternational && iban?.equals("invalid", ignoreCase = true) == true) -> {
-                    ApiResult.Error("Invalid IBAN format", 400)
+                    ApiResult.Error(context.getString(R.string.error_invalid_iban), 400)
                 }
-
-                // TEST 7: FAILURE - Invalid SWIFT code
                 (isInternational && swiftCode?.equals("invalid", ignoreCase = true) == true) -> {
-                    ApiResult.Error("Invalid SWIFT code", 400)
+                    ApiResult.Error(context.getString(R.string.error_invalid_swift), 400)
                 }
-
-                // TEST 8: FAILURE - Specific test for international transfers
                 (isInternational && recipientName.equals("failed", ignoreCase = true)) -> {
-                    ApiResult.Error("International transfer failed: Insufficient funds", 402)
+                    ApiResult.Error(context.getString(R.string.error_international_failed), 402)
                 }
-
-                // SUCCESS CASES
                 else -> {
-                    val transactionType = if (isInternational) "INTERNATIONAL" else "DOMESTIC"
-
                     val mockResponse = PaymentApiResponse(
                         transactionId = "TX${System.currentTimeMillis()}",
                         status = "SUCCESS",
@@ -79,22 +60,37 @@ class PaymentRepositoryImpl @Inject constructor(
                         amount = amount,
                         recipient = recipientName
                     )
-
                     ApiResult.Success(mockResponse)
                 }
-
-
             }
 
-            /*// In a real app,  would get this from a secure storage
-            // call real api
-               */
+            // Replace with actual API call when available
+           /* // Create appropriate request based on transfer type
+            val response = if (isInternational) {
+                val internationalRequest = InternationalPaymentRequest(
+                    recipientName = recipientName,
+                    accountNumber = accountNumber,
+                    amount = amount,
+                    iban = iban ?: "",
+                    swiftCode = swiftCode ?: ""
+                )
+                paymentApi.sendInternationalPayment("Bearer your_auth_token_here", internationalRequest)
+            } else {
+                val domesticRequest = DomesticPaymentRequest(
+                    recipientName = recipientName,
+                    accountNumber = accountNumber,
+                    amount = amount
+                )
+                paymentApi.sendDomesticPayment("Bearer your_auth_token_here", domesticRequest)
+            }
+            ApiResult.Success(response)*/
+
         } catch (e: IOException) {
-            ApiResult.Error("Network error. Please check your connection.")
+            ApiResult.Error(context.getString(R.string.error_network))
         } catch (e: HttpException) {
-            ApiResult.Error("Server error: ${e.code()}")
+            ApiResult.Error(context.getString(R.string.error_server_generic, e.code()))
         } catch (e: Exception) {
-            ApiResult.Error("Unexpected error: ${e.message}")
+            ApiResult.Error(context.getString(R.string.error_unexpected, e.message ?: "Unknown"))
         }
     }
 }

@@ -34,6 +34,10 @@ import com.example.bankapplication.ui.components.ErrorTextField
 import com.example.bankapplication.util.ApiResult
 import com.example.bankapplication.viewmodel.PaymentViewModel
 
+/**
+ * Success screen displaying payment confirmation results.
+ * Shows transaction status and provides navigation back to payments.
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +75,7 @@ fun SuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Success icon
+
             Icon(
                 imageVector = Icons.Default.CheckCircle,
                 contentDescription = "Success",
@@ -81,7 +85,6 @@ fun SuccessScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Success message using ErrorTextField
             ErrorTextField(
                 message = stringResource(R.string.payment_successful),
                 color = MaterialTheme.colorScheme.primary,
@@ -91,7 +94,6 @@ fun SuccessScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Additional success details using ErrorTextField
             ErrorTextField(
                 message = stringResource(R.string.payment_success_details),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -101,7 +103,6 @@ fun SuccessScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Error message using the same component
             if (paymentResult is ApiResult.Error) {
                 ErrorTextField(
                     message = (paymentResult as ApiResult.Error).message,
@@ -110,7 +111,6 @@ fun SuccessScreen(
                 )
             }
 
-            // Back to home button
             Button(
                 onClick = {
                     navController?.popBackStack("payments", inclusive = false)

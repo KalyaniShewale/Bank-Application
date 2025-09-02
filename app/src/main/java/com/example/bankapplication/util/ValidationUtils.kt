@@ -1,5 +1,10 @@
 package com.example.bankapplication.util
 
+/**
+ * Utility class containing validation functions for payment form inputs.
+ * Handles name, account number, amount, IBAN, and SWIFT code validation with specific rules.
+ */
+
 object ValidationUtils {
 
     // Name Validation - returns true if valid, false if invalid
@@ -46,7 +51,8 @@ object ValidationUtils {
     // IBAN Validation - returns true if valid, false if invalid
     fun validateIBAN(iban: String): Boolean {
         val cleanIban = iban.replace("\\s".toRegex(), "").uppercase()
-        val validCountryCodes = listOf("US", "GB", "DE", "FR", "IT", "ES", "NL", "BE", "CH", "AU", "CA", "IN")
+        val validCountryCodes =
+            listOf("US", "GB", "DE", "FR", "IT", "ES", "NL", "BE", "CH", "AU", "CA", "IN")
 
         return when {
             iban.isBlank() -> false

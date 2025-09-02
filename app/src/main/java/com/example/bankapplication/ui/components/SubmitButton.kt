@@ -6,6 +6,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+/**
+ * Reusable button component for form submissions with enabled state handling.
+ */
+
 @Composable
 fun SubmitButton(
     label: String,

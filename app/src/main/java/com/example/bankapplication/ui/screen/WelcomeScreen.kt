@@ -11,11 +11,19 @@ import androidx.compose.ui.res.stringResource
 import com.example.bankapplication.R
 import kotlinx.coroutines.delay
 
+/**
+ * Welcome screen simulating app initialization and security checks.
+ * This screen handles the 5-second delay that mimics login authentication,
+ * security verification, and app setup processes before proceeding to payments.
+ * In a real application, this would be where user login and security validations occur,
+ * but for this demo, we simulate that process and automatically navigate to payments.
+ */
+
 @Composable
 fun WelcomeScreen(
     onContinue: () -> Unit
 ) {
-    // 👇 Automatically trigger navigation after 5 sec
+    // Automatically trigger navigation after 5 sec
     LaunchedEffect(Unit) {
         delay(5_000) // 5 seconds
         onContinue()

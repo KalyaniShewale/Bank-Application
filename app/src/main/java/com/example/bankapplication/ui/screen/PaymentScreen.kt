@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.bankapplication.ui.components.ErrorTextField
+import com.example.bankapplication.ui.navigation.Routes
 import com.example.bankapplication.viewmodel.NavigationData
 
 
@@ -59,14 +60,12 @@ fun PaymentScreen(
     val navigationData by viewModel.navigationData.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackBarHostState = remember { SnackbarHostState() }
-   // val context = LocalContext.current
 
-    // Navigate to success screen when payment is successful
     LaunchedEffect(navigationData) {
         when (navigationData) {
             is NavigationData.Success -> {
                 viewModel.resetForm()
-                navController?.navigate("successScreen") {
+                navController?.navigate(Routes.SUCCESS) {
                     popUpTo("paymentScreen/${transferType}") { inclusive = true }
                 }
                 // Reset navigation data after navigating
@@ -78,7 +77,7 @@ fun PaymentScreen(
         }
     }
 
-    // Handle errors with Snac kbar
+    // Handle errors with Snack bar
     LaunchedEffect(paymentResult) {
         when (paymentResult) {
             is ApiResult.Error -> {
@@ -89,12 +88,11 @@ fun PaymentScreen(
                 )
             }
             else -> {
-                // Loading and success handled elsewhere
+                // Loading and success handled else where
             }
         }
     }
 
-    // Set payment type when screen loads
     LaunchedEffect(transferType) {
         viewModel.setPaymentType(transferType)
     }
@@ -164,7 +162,7 @@ fun PaymentScreen(
                     }
                 },
                 error = if (!state.isAmountValid && state.amountTouched) {
-                    if (state.amount.toDoubleOrNull() ?: 0.0 > 99999.99) {
+                    if ((state.amount.toDoubleOrNull() ?: 0.0) > 99999.99) {
                         stringResource(R.string.error_invalid_amount_enter)
                     } else {
                         stringResource(R.string.error_invalid_amount)
@@ -212,7 +210,7 @@ fun PaymentScreen(
                         viewModel.sendPayment() },
                     enabled = isFormValid(state, transferType)
                 )
-                // Display error message below the send button
+
                 if (paymentResult is ApiResult.Error) {
                     val errorMessage = (paymentResult as ApiResult.Error).message
                     ErrorMessageRow(message = errorMessage)
@@ -222,9 +220,6 @@ fun PaymentScreen(
     }
 }
 
-
-
-// Helper function to check form validity
 private fun isFormValid(state: PaymentFormState, transferType: PaymentType): Boolean {
     return when (transferType) {
         PaymentType.Domestic -> {

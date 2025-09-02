@@ -1,7 +1,5 @@
 package com.example.bankapplication.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapplication.model.PaymentType
@@ -16,10 +14,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel managing payment form state, validation, and submission logic.
+ * Handles user input validation, payment processing, and navigation state.
+ */
 
 private fun Boolean.then(block: () -> Boolean) = if (this) block() else true
 
-// Holds all form field values + validation results
 data class PaymentFormState(
     val recipientName: String = "",
     val accountNumber: String = "",
@@ -31,17 +32,13 @@ data class PaymentFormState(
     val isAmountValid: Boolean = false,
     val isIbanValid: Boolean = false,
     val isSwiftValid: Boolean = false,
-    // track if user touched field
     val recipientNameTouched: Boolean = false,
     val accountNumberTouched: Boolean = false,
     val amountTouched: Boolean = false,
     val ibanTouched: Boolean = false,
     val swiftTouched: Boolean = false,
     val paymentType: PaymentType = PaymentType.Domestic
-) {
-}
-
-
+)
 
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
@@ -56,7 +53,6 @@ class PaymentViewModel @Inject constructor(
     private val _navigationData = MutableStateFlow<NavigationData?>(null)
     val navigationData: StateFlow<NavigationData?> = _navigationData.asStateFlow()
 
-    // --- Update each field + run validation ---
     fun onRecipientNameChanged(value: String) {
         _formState.update { currentState ->
             currentState.copy(
@@ -91,7 +87,6 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    // New fields for international transfer
     fun onIbanChanged(value: String) {
         _formState.update { currentState ->
             currentState.copy(

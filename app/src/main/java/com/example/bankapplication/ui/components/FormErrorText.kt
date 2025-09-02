@@ -13,6 +13,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Composable for displaying error messages with consistent styling.
+ */
+
 @Composable
 fun ErrorTextField(
     message: String,

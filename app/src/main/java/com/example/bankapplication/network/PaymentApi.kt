@@ -7,6 +7,10 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
+/**
+ * Retrofit service interface for domestic and international payment API endpoints.
+ */
+
 interface PaymentApiService {
 
     @POST("payments/domestic")

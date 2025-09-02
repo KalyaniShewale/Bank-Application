@@ -13,6 +13,10 @@ import androidx.compose.ui.unit.sp
 import com.example.bankapplication.R
 import com.example.bankapplication.ui.components.ErrorTextField
 
+/**
+ * Screen displaying payment type selection options domestic or international.transfer with navigation buttons.
+ */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaymentsScreen(
@@ -37,7 +41,6 @@ fun PaymentsScreen(
             )
         )
 
-        // Content
         Box(
             modifier = Modifier
                 .fillMaxSize()

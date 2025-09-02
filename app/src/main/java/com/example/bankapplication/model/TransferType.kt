@@ -1,5 +1,9 @@
 package com.example.bankapplication.model
 
+/**
+* Sealed class defining payment types with string conversion utilities.
+*/
+
 sealed class PaymentType(val value: String) {
     object Domestic :
         PaymentType("domestic")
