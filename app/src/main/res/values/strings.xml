@@ -40,4 +40,11 @@
     <string name="transfer_type_international">international</string>
     <string name="payment_screen_route">paymentScreen/{transferType}</string>
     <string name="success_screen_route">successScreen</string>
+
+    <string name="title_success">Payment Successful</string>
+    <string name="payment_successful">Payment Completed Successfully!</string>
+    <string name="payment_success_details">Your transaction has been processed. You will receive a confirmation email shortly.</string>
+    <string name="button_more_transactions">More Transactions</string>
+    <string name="error_invalid_amount_enter">Your account doesn\'t have permission for amounts above 100,000</string>
+
 </resources>

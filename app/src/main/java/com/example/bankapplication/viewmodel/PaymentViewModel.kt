@@ -39,12 +39,6 @@ data class PaymentFormState(
     val swiftTouched: Boolean = false,
     val paymentType: PaymentType = PaymentType.Domestic
 ) {
-    val isFormValid: Boolean
-        get() = recipientName.isNotBlank() && isRecipientNameValid &&
-                accountNumber.isNotBlank() && isAccountNumberValid &&
-                amount.isNotBlank() && isAmountValid &&
-                (iban.isBlank() || isIbanValid) &&
-                (swift.isBlank() || isSwiftValid)
 }
 
 
@@ -73,6 +67,10 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
+    fun resetForm() {
+        _formState.value = PaymentFormState()
+    }
+
     fun onAccountNumberChanged(value: String) {
         _formState.update { currentState ->
             currentState.copy(
@@ -99,7 +97,7 @@ class PaymentViewModel @Inject constructor(
             currentState.copy(
                 iban = value,
                 ibanTouched = true,
-                isIbanValid = ValidationUtils.validateIban(value)
+                isIbanValid = ValidationUtils.validateIBAN(value)
             )
         }
     }
@@ -109,7 +107,7 @@ class PaymentViewModel @Inject constructor(
             currentState.copy(
                 swift = value,
                 swiftTouched = true,
-                isSwiftValid = ValidationUtils.validateSwift(value)
+                isSwiftValid = ValidationUtils.validateSWIFT(value)
             )
         }
     }
@@ -118,7 +116,6 @@ class PaymentViewModel @Inject constructor(
         _formState.update { it.copy(paymentType = type) }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun sendPayment() {
         val state = _formState.value
 

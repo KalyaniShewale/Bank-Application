@@ -3,8 +3,6 @@ package com.example.bankapplication.repo
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.bankapplication.util.ApiResult
-import com.example.hankapplication.data.model.DomesticPaymentRequest
-import com.example.hankapplication.data.model.InternationalPaymentRequest
 import com.example.hankapplication.data.model.PaymentApiResponse
 import com.example.hankapplication.network.PaymentApiService
 import retrofit2.HttpException
@@ -14,13 +12,13 @@ import javax.inject.Inject
 class PaymentRepositoryImpl @Inject constructor(
     private val paymentApi: PaymentApiService
 ) {
-    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun sendPayment(
         recipientName: String,
         accountNumber: String,
         amount: Double,
         iban: String? = null,
-        swiftCode: String? = null
+        swiftCode: String? = null,
+        isInternational: Boolean = false
     ): ApiResult<PaymentApiResponse> {
         return try {
 
@@ -35,13 +33,13 @@ class PaymentRepositoryImpl @Inject constructor(
                     ApiResult.Error("Recipient not found or invalid", 404)
                 }
 
-                // TEST 2: FAILURE - Insufficient funds
-                amount > 10000 -> {
+                // TEST 2: FAILURE - Insufficient funds (only for amounts > 100)
+                amount < 100 -> {
                     ApiResult.Error("Insufficient funds", 402)
                 }
 
                 // TEST 3: FAILURE - Invalid account number
-                accountNumber.equals("00000000", ignoreCase = true) -> {
+                accountNumber.equals("11111111", ignoreCase = true) -> {
                     ApiResult.Error("Invalid account number", 400)
                 }
 
@@ -51,23 +49,27 @@ class PaymentRepositoryImpl @Inject constructor(
                 }
 
                 // TEST 5: FAILURE - Network error simulation
-                recipientName.equals("networkerror", ignoreCase = true) -> {
+                recipientName.equals("NetworkError", ignoreCase = true) -> {
                     throw java.io.IOException("Network connection failed")
                 }
 
                 // TEST 6: FAILURE - Invalid IBAN for international transfers
-                (iban != null && iban.equals("invalid", ignoreCase = true)) -> {
+                (isInternational && iban?.equals("invalid", ignoreCase = true) == true) -> {
                     ApiResult.Error("Invalid IBAN format", 400)
                 }
 
                 // TEST 7: FAILURE - Invalid SWIFT code
-                (swiftCode != null && swiftCode.equals("invalid", ignoreCase = true)) -> {
+                (isInternational && swiftCode?.equals("invalid", ignoreCase = true) == true) -> {
                     ApiResult.Error("Invalid SWIFT code", 400)
+                }
+
+                // TEST 8: FAILURE - Specific test for international transfers
+                (isInternational && recipientName.equals("failed", ignoreCase = true)) -> {
+                    ApiResult.Error("International transfer failed: Insufficient funds", 402)
                 }
 
                 // SUCCESS CASES
                 else -> {
-                    val isInternational = iban != null && swiftCode != null
                     val transactionType = if (isInternational) "INTERNATIONAL" else "DOMESTIC"
 
                     val mockResponse = PaymentApiResponse(
@@ -80,31 +82,13 @@ class PaymentRepositoryImpl @Inject constructor(
 
                     ApiResult.Success(mockResponse)
                 }
-            }
-            /*// In a real app, you would get this from a secure storage
-            val authToken = "Bearer your_auth_token_here"
 
-            val response = if (iban != null && swiftCode != null) {
-                // International Transfer
-                val request = InternationalPaymentRequest(
-                    recipientName = recipientName,
-                    accountNumber = accountNumber,
-                    amount = amount,
-                    iban = iban,
-                    swiftCode = swiftCode
-                )
-                paymentApi.sendInternationalPayment(authToken, request)
-            } else {
-                // Domestic Transfer
-                val request = DomesticPaymentRequest(
-                    recipientName = recipientName,
-                    accountNumber = accountNumber,
-                    amount = amount
-                )
-                paymentApi.sendDomesticPayment(authToken, request)
+
             }
 
-            ApiResult.Success(response)*/
+            /*// In a real app,  would get this from a secure storage
+            // call real api
+               */
         } catch (e: IOException) {
             ApiResult.Error("Network error. Please check your connection.")
         } catch (e: HttpException) {

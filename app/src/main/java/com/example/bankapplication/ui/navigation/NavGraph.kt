@@ -25,7 +25,7 @@ fun AppNavGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Screen.Welcome.route) {
 
         composable(Screen.Welcome.route) {
-            WelcomeScreen(onContinue = { navController.navigate(Screen.Main.route) })
+            WelcomeScreen(onContinue = { navController.navigate(Screen.Payments.route) })
         }
 
         composable(Screen.Main.route) {

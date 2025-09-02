@@ -1,7 +1,5 @@
 package com.example.bankapplication.ui.screen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,13 +8,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -27,9 +22,7 @@ import com.example.bankapplication.ui.components.TextFieldRow
 import com.example.bankapplication.viewmodel.PaymentViewModel
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.bankapplication.R
-import com.example.bankapplication.ui.navigation.Screen
 import com.example.bankapplication.util.ApiResult
 import com.example.bankapplication.viewmodel.PaymentFormState
 import androidx.compose.foundation.layout.Arrangement
@@ -38,11 +31,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
+import com.example.bankapplication.ui.components.ErrorMessageRow
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.bankapplication.ui.components.ErrorTextField
 import com.example.bankapplication.viewmodel.NavigationData
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaymentScreen(
     transferType: PaymentType,
@@ -52,14 +57,15 @@ fun PaymentScreen(
     val state by viewModel.formState.collectAsStateWithLifecycle()
     val paymentResult by viewModel.paymentResult.collectAsStateWithLifecycle()
     val navigationData by viewModel.navigationData.collectAsStateWithLifecycle()
-
-    val snackbarHostState = remember { SnackbarHostState() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val snackBarHostState = remember { SnackbarHostState() }
    // val context = LocalContext.current
 
     // Navigate to success screen when payment is successful
     LaunchedEffect(navigationData) {
         when (navigationData) {
             is NavigationData.Success -> {
+                viewModel.resetForm()
                 navController?.navigate("successScreen") {
                     popUpTo("paymentScreen/${transferType}") { inclusive = true }
                 }
@@ -72,12 +78,12 @@ fun PaymentScreen(
         }
     }
 
-    // Handle errors with Snackbar
+    // Handle errors with Snac kbar
     LaunchedEffect(paymentResult) {
         when (paymentResult) {
             is ApiResult.Error -> {
                 val error = (paymentResult as ApiResult.Error).message
-                snackbarHostState.showSnackbar(
+                snackBarHostState.showSnackbar(
                     message = error,
                     duration = SnackbarDuration.Long
                 )
@@ -94,7 +100,29 @@ fun PaymentScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackBarHostState) },
+                topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ErrorTextField(
+                            message = transferType.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                )
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -109,36 +137,61 @@ fun PaymentScreen(
                 value = state.recipientName,
                 onValueChange = { viewModel.onRecipientNameChanged(it) },
                 error = if (state.recipientNameTouched && !state.isRecipientNameValid) stringResource(R.string.error_invalid_name) else null,
-                maxLength = 60
+                maxLength = 60,
+                keyboardType = KeyboardType.Text,
+                filter = { it.isLetter() || it.isWhitespace() || it in ".'-" }
             )
 
             TextFieldRow(
                 label = stringResource(R.string.label_account_number),
                 value = state.accountNumber,
-                onValueChange = { viewModel.onAccountNumberChanged(it) },
+                onValueChange = {
+                    if (it.length <= 8 && it.all { char -> char.isDigit() }) {
+                        viewModel.onAccountNumberChanged(it)
+                    }
+                },
                 error = if (!state.isAccountNumberValid && state.accountNumberTouched) stringResource(R.string.error_invalid_account_number) else null,
-                maxLength = 11
+                maxLength = 8,
+                keyboardType = KeyboardType.Number
             )
 
             TextFieldRow(
                 label = stringResource(R.string.label_amount),
                 value = state.amount,
-                onValueChange = { viewModel.onAmountChanged(it) },
-                error = if (!state.isAmountValid && state.amountTouched) stringResource(R.string.error_invalid_amount) else null
+                onValueChange = {
+                    if (it.matches("^\\d{0,6}(\\.\\d{0,2})?\$".toRegex())) {
+                        viewModel.onAmountChanged(it)
+                    }
+                },
+                error = if (!state.isAmountValid && state.amountTouched) {
+                    if (state.amount.toDoubleOrNull() ?: 0.0 > 99999.99) {
+                        stringResource(R.string.error_invalid_amount_enter)
+                    } else {
+                        stringResource(R.string.error_invalid_amount)
+                    }
+                } else null,
+                keyboardType = KeyboardType.Decimal
             )
 
             if (transferType is PaymentType.International) {
                 TextFieldRow(
                     label = stringResource(R.string.label_iban),
                     value = state.iban,
-                    onValueChange = { viewModel.onIbanChanged(it) },
+                    onValueChange = {
+                        if (it.length <= 34) {
+                            viewModel.onIbanChanged(it)
+                        }
+                    },
                     error = if (!state.isIbanValid && state.ibanTouched) stringResource(R.string.error_invalid_iban) else null,
-                    maxLength = 34
+                    maxLength = 34,
+                    capitalization = KeyboardCapitalization.Characters,
+                    keyboardType = KeyboardType.Text
                 )
                 TextFieldRow(
                     label = stringResource(R.string.label_swift),
                     value = state.swift,
                     onValueChange = { viewModel.onSwiftCodeChanged(it) },
+                    capitalization = KeyboardCapitalization.Characters,
                     error = if (!state.isSwiftValid && state.swiftTouched) stringResource(R.string.error_invalid_swift) else null,
                     maxLength = 13
                 )
@@ -155,9 +208,15 @@ fun PaymentScreen(
             } else {
                 SubmitButton(
                     label = stringResource(R.string.button_send_payment),
-                    onClick = { viewModel.sendPayment() },
+                    onClick = { keyboardController?.hide()
+                        viewModel.sendPayment() },
                     enabled = isFormValid(state, transferType)
                 )
+                // Display error message below the send button
+                if (paymentResult is ApiResult.Error) {
+                    val errorMessage = (paymentResult as ApiResult.Error).message
+                    ErrorMessageRow(message = errorMessage)
+                }
             }
         }
     }
@@ -182,3 +241,4 @@ private fun isFormValid(state: PaymentFormState, transferType: PaymentType): Boo
         }
     }
 }
+
