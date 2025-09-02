@@ -26,4 +26,18 @@
     <!-- Payment Choices -->
     <string name="domestic_transfer">Domestic Transfer</string>
     <string name="international_transfer">International Transfer</string>
+
+    <!-- Success Screen Strings -->
+    <string name="success_title">Payment Successful!</string>
+    <string name="success_button_more_transactions">Do More Transactions</string>
+    <string name="success_amount">Amount: %s</string>
+    <string name="success_recipient">To: %s</string>
+    <string name="success_transaction_id">Transaction ID: %s</string>
+    <string name="success_icon_description">Success Icon</string>
+
+    <!-- Transfer Type Parameters -->
+    <string name="transfer_type_domestic">domestic</string>
+    <string name="transfer_type_international">international</string>
+    <string name="payment_screen_route">paymentScreen/{transferType}</string>
+    <string name="success_screen_route">successScreen</string>
 </resources>

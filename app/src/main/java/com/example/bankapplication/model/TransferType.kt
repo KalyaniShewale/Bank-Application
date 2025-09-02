@@ -1,11 +1,12 @@
 package com.example.bankapplication.model
 
-sealed class TransferType(val value: String) {
-    object Domestic : TransferType("domestic")
-    object International : TransferType("international")
+sealed class PaymentType(val value: String) {
+    object Domestic :
+        PaymentType("domestic")
+    object International : PaymentType("international")
 
     companion object {
-        fun fromString(value: String?): TransferType {
+        fun fromString(value: String?): PaymentType {
             return when (value?.lowercase()) {
                 Domestic.value -> Domestic
                 International.value -> International

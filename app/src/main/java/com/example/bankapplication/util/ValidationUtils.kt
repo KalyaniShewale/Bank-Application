@@ -1,5 +1,7 @@
 package com.example.bankapplication.util
 
+import java.util.regex.Pattern
+
 
 object ValidationUtils {
     // Must not be empty and at least 2 chars
@@ -23,7 +25,8 @@ object ValidationUtils {
     }
 
     // SWIFT format: 8 or 11 characters, alphanumeric
-    fun validateSwift(swift: String): Boolean {
-        return swift.matches(Regex("^[A-Z0-9]{8}(?:[A-Z0-9]{3})?$"))
+    fun validateSwift(swiftCode: String): Boolean {
+        val pattern = Pattern.compile("^[A-Za-z]{4}[-]?[A-Za-z]{2}[-]?[A-Za-z0-9]{2}[-]?[A-Za-z0-9]{3}?\$")
+        return pattern.matcher(swiftCode).matches() && swiftCode.length in 8..11
     }
 }
