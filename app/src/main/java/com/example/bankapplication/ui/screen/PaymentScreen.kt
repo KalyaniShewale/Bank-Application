@@ -102,7 +102,11 @@ fun PaymentScreen(
         snackbarHost = { SnackbarHost(snackBarHostState) },
                 topBar =   {
                     AppTopBar(
-                        title = stringResource(R.string.tab_payments),
+                        title = if (transferType == PaymentType.International) {
+                            stringResource(R.string.international_transfer)
+                        } else {
+                            stringResource(R.string.domestic_transfer)
+                        },
                         titleColor = MaterialTheme.colorScheme.primary,
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         onBackClick = { navController?.popBackStack() }
