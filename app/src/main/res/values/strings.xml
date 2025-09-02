@@ -1,3 +1,58 @@
 <resources>
     <string name="app_name">Bank Application</string>
+    <!-- Labels -->
+    <string name="label_recipient_name">Recipient Name</string>
+    <string name="label_account_number">Account Number</string>
+    <string name="label_amount">Amount</string>
+    <string name="label_iban">IBAN</string>
+    <string name="label_swift">SWIFT</string>
+    <string name="button_send_payment">Send Payment</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_name">Invalid Name</string>
+    <string name="error_invalid_account_number">Invalid Account Number</string>
+    <string name="error_invalid_amount">Invalid Amount</string>
+    <string name="error_invalid_iban">Invalid IBAN</string>
+    <string name="error_invalid_swift">Invalid SWIFT</string>
+    <string name="error_recipient_not_found">Recipient not found or invalid</string>
+    <string name="error_insufficient_funds">Insufficient funds</string>
+    <string name="error_invalid_account">Invalid account number</string>
+    <string name="error_server">Internal server error</string>
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_international_failed">International transfer failed: Insufficient funds</string>
+    <string name="error_server_generic">Server error: %d</string>
+    <string name="error_unexpected">Unexpected error: %s</string>
+
+    <!-- Welcome -->
+    <string name="welcome_message">Welcome to Bank Application</string>
+
+    <!-- Navigation Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_payments">Payments</string>
+    <string name="tab_profile">Profile</string>
+
+    <!-- Payment Choices -->
+    <string name="domestic_transfer">Domestic Transfer</string>
+    <string name="international_transfer">International Transfer</string>
+
+    <!-- Success Screen Strings -->
+    <string name="success_title">Payment Successful!</string>
+    <string name="success_button_more_transactions">Do More Transactions</string>
+    <string name="success_amount">Amount: %s</string>
+    <string name="success_recipient">To: %s</string>
+    <string name="success_transaction_id">Transaction ID: %s</string>
+    <string name="success_icon_description">Success Icon</string>
+
+    <!-- Transfer Type Parameters -->
+    <string name="transfer_type_domestic">domestic</string>
+    <string name="transfer_type_international">international</string>
+    <string name="payment_screen_route">paymentScreen/{transferType}</string>
+    <string name="success_screen_route">successScreen</string>
+
+    <string name="title_success">Payment Successful</string>
+    <string name="payment_successful">Payment Completed Successfully!</string>
+    <string name="payment_success_details">Your transaction has been processed. You will receive a confirmation email shortly.</string>
+    <string name="button_more_transactions">More Transactions</string>
+    <string name="error_invalid_amount_enter">Your account doesn\'t have permission for amounts above 100,000</string>
+
 </resources>
