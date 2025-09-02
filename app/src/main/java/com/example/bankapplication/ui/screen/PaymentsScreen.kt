@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bankapplication.R
+import com.example.bankapplication.ui.components.AppTopBar
 import com.example.bankapplication.ui.components.ErrorTextField
 
 /**
@@ -25,20 +26,10 @@ fun PaymentsScreen(
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         // Tab Bar with ErrorTextField
-        CenterAlignedTopAppBar(
-            title = {
-                ErrorTextField(
-                    message = stringResource(R.string.tab_payments),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-            },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            )
+        AppTopBar(
+            title = stringResource(R.string.tab_payments),
+            titleColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
 
         Box(

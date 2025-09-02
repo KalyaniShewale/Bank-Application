@@ -67,4 +67,4 @@ A modern Android payment application built with Kotlin and Jetpack Compose that 
 - Account Number: 12348765
 - Amount: 500.00
 - IBAN: GB29NWBK60161331926819
-- SWIFT: ABCDUS33
+-ed SWIFT: ABCDUS33

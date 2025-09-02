@@ -5,10 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import com.example.bankapplication.R
+import com.example.bankapplication.ui.components.AppTopBar
 import kotlinx.coroutines.delay
 
 /**
@@ -28,14 +30,27 @@ fun WelcomeScreen(
         delay(5_000) // 5 seconds
         onContinue()
     }
+    Scaffold(
+        topBar = {
+            // ✅ Optional: Add TopBar to WelcomeScreen for consistency
+            AppTopBar(
+                title = stringResource(R.string.app_name),
+                titleColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        }
+    ) { paddingValues ->
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(R.string.welcome_message),
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.welcome_message),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        }
     }
 }

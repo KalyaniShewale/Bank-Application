@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.bankapplication.ui.components.AppTopBar
 import com.example.bankapplication.ui.components.ErrorTextField
 import com.example.bankapplication.ui.navigation.Routes
 import com.example.bankapplication.viewmodel.NavigationData
@@ -99,28 +100,14 @@ fun PaymentScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
-                topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ErrorTextField(
-                            message = transferType.value,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
+                topBar =   {
+                    AppTopBar(
+                        title = stringResource(R.string.tab_payments),
+                        titleColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        onBackClick = { navController?.popBackStack() }
+                    )
+                }
     ) { paddingValues ->
         Column(
             modifier = Modifier

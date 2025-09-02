@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.bankapplication.R
+import com.example.bankapplication.ui.components.AppTopBar
 import com.example.bankapplication.ui.components.ErrorTextField
 import com.example.bankapplication.util.ApiResult
 import com.example.bankapplication.viewmodel.PaymentViewModel
@@ -49,21 +50,10 @@ fun SuccessScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ErrorTextField(
-                            message = stringResource(R.string.title_success),
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+            AppTopBar(
+                title = stringResource(R.string.title_success),
+                titleColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             )
         }
     ) { paddingValues ->
