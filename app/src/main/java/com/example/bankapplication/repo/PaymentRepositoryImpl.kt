@@ -81,7 +81,7 @@ class PaymentRepositoryImpl @Inject constructor(
                     accountNumber = accountNumber,
                     amount = amount
                 )
-                paymentApi.sendDomesticPayment("Bearer your_auth_token_here", domesticRequest)
+                paymentApi.sendDomesticPayment("auth_token_here", domesticRequest)
             }
             ApiResult.Success(response)*/
 

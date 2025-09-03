@@ -25,6 +25,9 @@ interface PaymentApiService {
         @Body request: InternationalPaymentRequest
     ): PaymentApiResponse
 
+    // DEMO ONLY: Hard-coded for simplicity in this sample.
+    // In a real application, store the URL securely in a build configuration
+    // or environment variable to avoid exposing it in source code.
     companion object {
         const val BASE_URL = "https://api.yourbank.com/v1/"
     }
